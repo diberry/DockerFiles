@@ -1,0 +1,46 @@
+# To build and run with Docker:
+#
+# IMAGENAME - Generic (such as NodeLatest) or specific (such as repo name)
+# HOSTSRC - full path to host computer source code
+# CONTAINERSRC - full path to container's version of source code
+# CONTAINERCOMMAND - such as bash shell with '/bin/bash' - connect to container in order to use terminal/cli
+#
+# 3000 & 3001 - map container ports to host ports so host terminal/command can access container web site/objects
+# tail -f /dev/null - no-op to keep container alive
+#
+#  $ docker build -t IMAGENAME .
+#  $ docker run -it -p 3000:3000 -p 3001:3001 -v HOSTSRC:CONTAINERSRC -d IMAGENAME tail -f /dev/null
+#  $ docker ps <to get ID for next line>
+#  $ docker exec -it ID CONTAINERCOMMAND
+
+# Pull down docker image from docker hub known as 'node:latest'
+# This image is maintained by the Node foundation
+FROM node:latest
+
+# Make users, groups and directories with permissions in container
+RUN mkdir -p / /home/nodejs && \
+    groupadd -r nodejs && \
+    useradd -r -g nodejs -d /home/nodejs -s /sbin/nologin nodejs && \
+    chown -R nodejs:nodejs /home/nodejs
+
+# Make directory for working source code
+WORKDIR /workingsrc
+
+# Copy Host's package.json into container
+COPY package.json /workingsrc/
+
+# Run Container's version of install
+# Files are placed in /workingsrc/ 
+RUN npm install --unsafe-perm=true
+
+# Copy Host's files into Container
+COPY . /workingsrc
+
+# Set Permissions on Container's working source
+RUN chown -R nodejs:nodejs /workingsrc
+
+# Run container as user 'nodejs'
+USER nodejs
+
+# Run command 'npm start' - assumes package.json has that command in the scripts section
+CMD [ "npm", "start" ]
