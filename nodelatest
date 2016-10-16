@@ -1,6 +1,6 @@
 # To build and run with Docker:
 #
-# IMAGENAME - Generic (such as NodeLatest) or specific (such as repo name)
+# IMAGETAG - Generic (such as NodeLatest) or specific (such as repo name), 'yourgitname/imagename', ex: 'dfberry/nodelatest'
 # HOSTSRC - full path to host computer source code
 # CONTAINERSRC - full path to container's version of source code
 # CONTAINERCOMMAND - such as bash shell with '/bin/bash' - connect to container in order to use terminal/cli
@@ -8,8 +8,8 @@
 # 3000 & 3001 - map container ports to host ports so host terminal/command can access container web site/objects
 # tail -f /dev/null - no-op to keep container alive
 #
-#  $ docker build -t IMAGENAME .
-#  $ docker run -it -p 3000:3000 -p 3001:3001 -v HOSTSRC:CONTAINERSRC -d IMAGENAME tail -f /dev/null
+#  $ docker build -t IMAGETAG .
+#  $ docker run -it -p 3000:3000 -p 3001:3001 -v HOSTSRC:CONTAINERSRC -d IMAGETAG tail -f /dev/null
 #  $ docker ps <to get ID for next line>
 #  $ docker exec -it ID CONTAINERCOMMAND
 
