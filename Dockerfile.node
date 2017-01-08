@@ -1,0 +1,18 @@
+# u: docker
+# p: docker
+# groups: sudo
+
+# base has node, npm, git
+
+#Debian GNU/Linux 8 \n \l
+FROM node:latest  
+
+RUN apt-get update && \
+    apt-get install -y  sudo 
+
+RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo 
+
+USER docker
+WORKDIR /home/docker
+
+CMD tail -f /dev/null
