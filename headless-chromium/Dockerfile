@@ -12,5 +12,8 @@ EXPOSE 3000-3005:3000-3005
 RUN useradd -m docker && \
     echo "docker:docker" | chpasswd && \
     adduser docker sudo 
+    
+RUN apt-get update && \
+    apt-get install git
 
 WORKDIR /usr/src/app/
