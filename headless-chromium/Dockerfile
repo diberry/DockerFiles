@@ -16,6 +16,8 @@ RUN useradd -m docker && \
     echo "docker:docker" | chpasswd && \
     adduser docker sudo 
     
+ENV CHROME_BIN=/usr/bin/chromium-browser 
+    
 RUN apt-get update && \
     apt-get install default-jre && \
     apt-get install git
