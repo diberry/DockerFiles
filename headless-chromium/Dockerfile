@@ -1,5 +1,8 @@
 # USED for Karma Chrome tests only
 
+# make sure java is installed for protractor tests
+# https://github.com/linemanjs/lineman-angular-template/issues/22
+
 #  $ docker build -t karma-chrome .
 #  $ docker start NUM
 #  $ docker run -d -p 0.0.0.0:3000-3005:3000-3005 -p 5858:5858 -v /Users/dfberry/repos/urlmgr:/home/docker karma-chrome tail -f /dev/null
