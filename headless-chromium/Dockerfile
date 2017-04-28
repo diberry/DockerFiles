@@ -17,6 +17,7 @@ RUN useradd -m docker && \
     adduser docker sudo 
     
 RUN apt-get update && \
+    apt-get install default-jre && \
     apt-get install git
 
 WORKDIR /usr/src/app/
