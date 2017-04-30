@@ -1,6 +1,55 @@
-#  $ docker build -t karma-chrome .
-#  $ docker run -d -p 0.0.0.0:3000-3005:3000-3005 ng-e2e tail -f /dev/null
-#  $ docker exec -it NUM /bin/bash
+# INTRO - docker container meant to be used as dev environment
+# for client-side development, specifically tested with angular 
+# webpack, karma, jasmine, and protractor
+
+# NOTES -   NPM used for install sometimes
+#           YARN is far more dependable so use after installation
+
+# SUDO USER: docker
+# PWD: docker
+
+# DO NOT - this is not meant to be a run and return answer container
+
+# DO - run in console with shared directory
+# between host and container as IDE
+
+# VARIABLES TO REPLACE
+# HOST_SRC_PATH: your host computer's path to any src you want to share with container
+# CONTAINER_SRC_PATH: /usr/src/app/
+
+# DOCKER USAGE - BUILD IMAGE
+#       image named client-e2e
+#  $ docker build -t client-e2e .
+
+# DOCKER USAGE - CREATE DETACHED CONTAINER
+#       container named client-e2e-run
+#       with shared ports of 3000-3005
+#       with shared directory
+#       with tail running - so container doesn't exit
+#  $ docker run -d -p 0.0.0.0:3000-3005:3000-3005 -v HOST_SRC_PATH:CONTAINER_SRC_PATH --name client-e2e-run client-e2e tail -f /dev/null
+
+# dfb only
+# docker run -d -p 0.0.0.0:3000-3005:3000-3005 -v /Users/dfberry/repos/urlmgr/:/usr/src/app/urlmgr/ --name client-e2e-run client-e2e tail -f /dev/null
+
+# DOCKER USAGE - verify docker container started 
+#  $ docker ps -a
+
+# DOCKER USAGE - OPEN NAMED CONTAINER IN TERMINAL FOR DEVELOPMENT AND TEST
+#       with bash running
+#  $ docker exec -it client-e2e-run /bin/bash
+
+# BUILD PROJECT INTO DIST folder
+#  $ npm run build:prod
+
+# RUN WEBSITE at localhost:3000
+#  $ npm run server:prod:ci
+
+# UNIT TESTS - tests for angular-webpack-starter
+#  $ npm run test
+
+# e2e TESTS - tests for angular-webpack-starter
+#  $ npm run e2e
+
 
 FROM markadams/chromium-xvfb-js:7
 
@@ -41,36 +90,28 @@ RUN apt-get update -qqy \
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Angular Cli
-RUN npm install --unsafe-perm -g @angular/cli
+WORKDIR /usr/src/app/
 
-# Install Protractor
-# Jasmine and protractor global install
-# 2. Step to fixing the error for Node.js native addon build tool (node-gyp)
-# https://github.com/nodejs/node-gyp/issues/454
-RUN npm install --unsafe-perm -g protractor && \
+RUN npm install --unsafe-perm -g @angular/cli && \
+  npm install --unsafe-perm -g protractor && \
+  npm install -g yarn 
 # Get the latest Google Chrome driver
-  npm update && \
-# Get the latest WebDriver Manager
-  webdriver-manager update
+  #npm update 
+  #webdriver-manager update
 
-# Global reporters for protractor
-RUN npm install --unsafe-perm -g \
-    jasmine \
-    jasmine-reporters \
-    jasmine-spec-reporter \
-    protractor-jasmine2-html-reporter \
-    jasmine-allure-reporter \
-    protractor-console
-
-WORKDIR /usr/src/app/
-
-# install yarn & webpack ng2 starter (has e2e test inside)
-RUN npm install -g yarn && \
-    git clone https://github.com/AngularClass/angular2-webpack-starter && \
+# install yarn & angular project - webpack ng2 starter (has e2e test inside)
+RUN git clone https://github.com/AngularClass/angular2-webpack-starter && \
     cd angular2-webpack-starter && \
-    yarn install
+    yarn install 
 
-ENV CHROME_BIN=/usr/bin/chromium-browser
+    #jasmine \
+    #jasmine-reporters \
+    #jasmine-spec-reporter \
+    #protractor-jasmine2-html-reporter \
+    #jasmine-allure-reporter \
+    #protractor-console 
+    
+# update webdriver-manager
+RUN webdriver-manager update
 
-WORKDIR /usr/src/app/
+WORKDIR /usr/src/app/angular2-webpack-starter
