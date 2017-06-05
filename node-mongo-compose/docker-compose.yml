@@ -1,0 +1,42 @@
+# Run docker-compose build --no-cache
+# Run docker-compose up --no-recreate
+# docker exec -it -u root <host-container-id> /bin/bash
+# docker inspect <container id>
+# docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+# Live long and prosper
+
+version: '2'
+
+services:
+
+
+
+#http://localhost:8010/website/
+  web: 
+    container_name: compose-web-2
+    build: .
+    ports:
+      - "3000-3005:3000-3005"
+      - "5858:5858"
+    networks:
+      - my-js-network
+    environment:
+      - VIRTUAL_HOST=web
+    volumes:
+      - /Users/dfberry/repos/urlmgr:/usr/src/app/urlmgr
+
+
+  db:
+    container_name: compose-mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+      - "3006:3006"
+    networks:
+      - my-js-network
+    environment:
+      - VIRTUAL_HOST=db
+
+networks:
+  my-js-network:
+    driver: bridge
