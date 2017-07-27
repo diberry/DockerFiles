@@ -1,0 +1,37 @@
+# Run docker-compose build --no-cache
+# Run docker-compose up --no-recreate
+# docker exec -it -u root <host-container-id> /bin/bash
+# docker inspect <container id>
+# docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+
+version: '2'
+
+services:
+
+  web: 
+    container_name: mynode
+    build: .
+    volumes:
+      - /Users/dfberry/repos/docker-node-chrome-debug:/usr/src/docker-node-chrome-debug
+    ports:
+      - "localhost:3000-3010:3000-3010"
+      - "localhost:5858:5858"
+    networks:
+      - my-network
+    environment:
+      - VIRTUAL_HOST=mynode
+
+  db:
+    container_name: mymongo
+    image: mongo
+    ports:
+      - "localhost:27017:27017"
+      - "localhost:3020:3020"
+    networks:
+      - my-network
+    environment:
+      - VIRTUAL_HOST=mymongo
+
+networks:
+  my-network:
+    driver: bridge
