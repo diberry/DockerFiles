@@ -1,11 +1,16 @@
-// Retrieve
-var MongoClient = require('mongodb').MongoClient;
+// Source: https://github.com/einaros/ws
 
-// Connect to the db - in the other container via
-// dns name 
-MongoClient.connect("mongodb://mymongo:27017/exampleDb", function(err, db) {
-  if(!err) console.log("We are connected");
+let port = 3001;
 
-   console.log('err = ' + err);
-  
+var WebSocketServer = require('ws').Server
+  , wss = new WebSocketServer({ port: port });
+
+console.log("socket on port " + port);
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+
+  ws.send('something');
 });
