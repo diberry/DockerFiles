@@ -1,3 +1,4 @@
 .Net 
 docker run -it microsoft/dotnet:latest
 https://www.microsoft.com/net/core#dockercmd
+this is just a moby os 
