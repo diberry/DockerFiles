@@ -1,0 +1,41 @@
+version: '3'
+
+# docker-compose up —-build
+# docker-compose exec {service name} sh
+
+services:
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    expose:
+      - 9000
+    ports:
+      - "127.0.0.1:9000:9000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./server:/server
+      - ./server/node_modules:/server/node_modules
+    command: npm start
+  client:
+    stdin_open: true
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    expose:
+      - 3000
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./client:/client
+      - ./client/node_modules:/client/node_modules
+    links:
+      - server
+    depends_on:
+      - server
